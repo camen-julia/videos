@@ -51,43 +51,39 @@ function createCard(video){
 src="${video.thumbnail}"
 alt="${video.title}">
 
+<div class="actions">
+
+<button onclick="likeVideo('${video.id}')">
+❤️
+</button>
+
+<span>${video.likes || 0}</span>
+
+<button onclick="shareVideo('${video.videoUrl}')">
+🔗
+</button>
+
+<button disabled>
+👁️
+</button>
+
+<span>${video.views || 0}</span>
+
+</div>
+
 <div class="video-info">
 
 <h3>${video.title}</h3>
 
-<p>❤️ ${video.likes || 0}</p>
-
-<p>👁️ ${video.views || 0}</p>
-
-<div class="actions">
+</div>
 
 <button
-class="edit-btn"
-onclick="likeVideo('${video.id}')">
-
-❤️ Like
-
-</button>
-
-<button
-class="edit-btn"
-onclick="shareVideo('${video.videoUrl}')">
-
-🔗 Share
-
-</button>
-
-<button
-class="delete-btn"
+class="watch-btn"
 onclick="watchVideo('${video.id}','${video.videoUrl}')">
 
-▶ Watch
+▶ Watch Video
 
 </button>
-
-</div>
-
-</div>
 
 </div>
 
@@ -97,15 +93,17 @@ onclick="watchVideo('${video.id}','${video.videoUrl}')">
 window.likeVideo = async function(id){
 
     await updateDoc(doc(db,"videos",id),{
-
         likes:increment(1)
-
     });
 
-    loadVideos();
+    const video = videos.find(v => v.id === id);
+
+    if(video){
+        video.likes = (video.likes || 0) + 1;
+        renderVideos(videos);
+    }
 
 }
-
 window.watchVideo = async function(id,url){
 
     await updateDoc(doc(db,"videos",id),{
