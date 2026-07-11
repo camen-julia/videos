@@ -102,163 +102,42 @@ background:#b00000;
 
 <body>
 
+<body>
+
 <div class="container">
 
-<h1>🎬 Admin Panel</h1>
+<h1>🎬 Video Admin</h1>
 
-<input id="title" placeholder="Video Title">
+<input
+id="title"
+type="text"
+placeholder="Video Title">
 
-<input id="category" placeholder="Category">
+<input
+id="thumbnail"
+type="text"
+placeholder="Thumbnail Image URL">
 
-<input id="thumbnail" placeholder="Thumbnail Image URL">
+<input
+id="videoUrl"
+type="text"
+placeholder="YouTube / Facebook / TikTok URL">
 
-<input id="videoUrl" placeholder="Video URL">
+<button id="saveBtn">
+💾 Save Video
+</button>
 
-<button id="saveBtn">Save Video</button>
+<p id="status"></p>
 
-<div id="status"></div>
+<hr>
 
-<hr style="margin:30px 0">
-
-<h2>Video List</h2>
+<h2>📃 All Videos</h2>
 
 <div id="videoList"></div>
 
 </div>
 
-<script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-
-import {
-getFirestore,
-collection,
-addDoc,
-getDocs,
-deleteDoc,
-doc
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-
-const firebaseConfig = {
-apiKey:"AIzaSyBUUyZ-NgqhvrLve4u7BpDKbt560P5UJgQ",
-authDomain:"videos-d583f.firebaseapp.com",
-projectId:"videos-d583f",
-storageBucket:"videos-d583f.firebasestorage.app",
-messagingSenderId:"1027579550246",
-appId:"1:1027579550246:web:3979429f01d4aa763b64e7"
-};
-
-const app=initializeApp(firebaseConfig);
-
-const db=getFirestore(app);
-
-const videoList=document.getElementById("videoList");
-
-async function loadVideos(){
-
-const snapshot=await getDocs(collection(db,"videos"));
-
-videoList.innerHTML="";
-
-snapshot.forEach((item)=>{
-
-const video=item.data();
-
-videoList.innerHTML+=`
-
-<div class="video-item">
-
-<img src="${video.thumbnail}" alt="">
-
-<div class="video-info">
-
-<h3>${video.title}</h3>
-
-<p>${video.category}</p>
-
-</div>
-
-<button class="delete-btn" onclick="deleteVideo('${item.id}')">
-
-Delete
-
-</button>
-
-</div>
-
-`;
-
-});
-
-}
-
-window.deleteVideo=async(id)=>{
-
-if(!confirm("Delete this video?")) return;
-
-await deleteDoc(doc(db,"videos",id));
-
-loadVideos();
-
-};
-
-document.getElementById("saveBtn").onclick=async()=>{
-
-const title=document.getElementById("title").value.trim();
-
-const category=document.getElementById("category").value.trim();
-
-const thumbnail=document.getElementById("thumbnail").value.trim();
-
-const videoUrl=document.getElementById("videoUrl").value.trim();
-
-if(!title||!category||!thumbnail||!videoUrl){
-
-alert("Please fill all fields");
-
-return;
-
-}
-
-try{
-
-await addDoc(collection(db,"videos"),{
-
-title,
-
-category,
-
-thumbnail,
-
-videoUrl
-
-});
-
-document.getElementById("status").innerHTML="✅ Video Saved Successfully";
-
-document.getElementById("title").value="";
-
-document.getElementById("category").value="";
-
-document.getElementById("thumbnail").value="";
-
-document.getElementById("videoUrl").value="";
-
-loadVideos();
-
-}catch(e){
-
-console.error(e);
-
-document.getElementById("status").innerHTML="❌ "+e.message;
-
-}
-
-};
-
-loadVideos();
-
-</script>
+</body>
 
 </body>
 </html>
