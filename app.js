@@ -38,41 +38,30 @@ function renderVideos(list) {
 
 }
 
-function createCard(video) {
+function createCard(video){
 
-    return `
+return `
 
 <div class="video-item">
 
-<img
-src="${video.thumbnail}"
-alt="${video.title}"
-loading="lazy">
+<img src="${video.thumbnail}" alt="${video.title}">
 
 <div class="actions">
 
-<button onclick="likeVideo('${video.id}')">
-❤️
-</button>
-
+<button onclick="likeVideo('${video.id}')">❤️</button>
 <span>${video.likes || 0}</span>
 
-<button onclick="shareVideo('${video.videoUrl}')">
-🔗
-</button>
+<button onclick="shareVideo('${video.videoUrl}')">🔗</button>
 
-<button onclick="watchVideo('${video.id}','${video.videoUrl}')">
-▶️
-</button>
+<button onclick="watchVideo('${video.id}','${video.videoUrl}')">▶️</button>
 
+<button disabled>👁️</button>
 <span>${video.views || 0}</span>
 
 </div>
 
 <div class="video-info">
-
 <h3>${video.title}</h3>
-
 </div>
 
 <button
