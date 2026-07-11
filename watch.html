@@ -116,12 +116,24 @@ document.body.innerHTML="<h2 style='text-align:center;margin-top:120px'>No Video
 
 function convert(url){
 
-if(url.includes("watch?v=")){
+    if(!url) return "";
 
-const id=url.split("watch?v=")[1].split("&")[0];
+    if(url.includes("watch?v=")){
+        const id = url.split("watch?v=")[1].split("&")[0];
+        return "https://www.youtube.com/embed/" + id + "?autoplay=1";
+    }
 
-return "https://www.youtube.com/embed/"+id+"?autoplay=1&playsinline=1&rel=0";
+    if(url.includes("youtu.be/")){
+        const id = url.split("youtu.be/")[1].split("?")[0];
+        return "https://www.youtube.com/embed/" + id + "?autoplay=1";
+    }
 
+    if(url.includes("shorts/")){
+        const id = url.split("shorts/")[1].split("?")[0];
+        return "https://www.youtube.com/embed/" + id + "?autoplay=1";
+    }
+
+    return url;
 }
 
 if(url.includes("youtu.be/")){
