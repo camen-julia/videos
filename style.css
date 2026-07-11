@@ -17,19 +17,23 @@ body{
     scroll-behavior:smooth;
 }
 
+body::-webkit-scrollbar{
+    display:none;
+}
+
 header{
     position:fixed;
     top:0;
     left:0;
     right:0;
-    z-index:1000;
     height:60px;
     display:flex;
     justify-content:center;
     align-items:center;
-    background:rgba(0,0,0,.65);
-    backdrop-filter:blur(8px);
-    font-size:28px;
+    background:rgba(0,0,0,.6);
+    backdrop-filter:blur(10px);
+    z-index:1000;
+    font-size:30px;
     font-weight:bold;
 }
 
@@ -52,16 +56,31 @@ header{
     object-fit:cover;
 }
 
+.video-item::after{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    height:45%;
+    background:linear-gradient(
+        transparent,
+        rgba(0,0,0,.9)
+    );
+    pointer-events:none;
+}
+
 .video-info{
     position:absolute;
     left:15px;
-    bottom:20px;
-    z-index:20;
+    bottom:95px;
+    max-width:70%;
+    z-index:30;
 }
 
 .video-info h3{
     font-size:22px;
-    margin-bottom:8px;
+    font-weight:bold;
     text-shadow:0 0 10px #000;
 }
 
@@ -77,19 +96,19 @@ header{
     flex-direction:column;
     align-items:center;
     gap:12px;
-    z-index:20;
+    z-index:30;
 }
 
 .actions button{
-    width:58px;
-    height:58px;
-    border-radius:50%;
+    width:60px;
+    height:60px;
     border:none;
+    border-radius:50%;
     background:rgba(0,0,0,.55);
     color:#fff;
     font-size:26px;
     cursor:pointer;
-    transition:.2s;
+    transition:.25s;
 }
 
 .actions button:hover{
@@ -98,28 +117,29 @@ header{
 }
 
 .actions span{
+    color:#fff;
     font-size:14px;
     font-weight:bold;
-    color:#fff;
-    text-shadow:0 0 5px #000;
+    text-shadow:0 0 8px #000;
 }
 
 .watch-btn{
     position:absolute;
-    bottom:25px;
     left:50%;
+    bottom:20px;
     transform:translateX(-50%);
     width:90%;
-    max-width:400px;
+    max-width:420px;
+    padding:16px;
+    border:none;
+    border-radius:35px;
     background:#ff3b30;
     color:#fff;
-    border:none;
-    padding:15px;
-    border-radius:30px;
     font-size:18px;
     font-weight:bold;
     cursor:pointer;
-    z-index:20;
+    z-index:30;
+    transition:.25s;
 }
 
 .watch-btn:hover{
@@ -129,7 +149,12 @@ header{
 @media(max-width:768px){
 
 header{
-    font-size:22px;
+    font-size:24px;
+}
+
+.video-info{
+    left:15px;
+    bottom:95px;
 }
 
 .video-info h3{
@@ -137,20 +162,23 @@ header{
 }
 
 .actions{
-    right:10px;
-    bottom:110px;
+    right:12px;
+    bottom:120px;
 }
 
 .actions button{
-    width:55px;
-    height:55px;
+    width:56px;
+    height:56px;
+    font-size:24px;
 }
 
 .watch-btn{
+    width:calc(100% - 30px);
     left:15px;
     right:15px;
-    width:calc(100% - 30px);
-    text-align:center;
+    transform:none;
+    max-width:none;
+    bottom:15px;
 }
 
 }
