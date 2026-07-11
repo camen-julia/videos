@@ -1,94 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Watch Video</title>
 
 <style>
-body{
+
+*{
 margin:0;
-background:#111;
-color:#fff;
+padding:0;
+box-sizing:border-box;
 font-family:Arial,sans-serif;
 }
 
-header{
-background:#ff3b30;
-padding:15px;
-text-align:center;
-font-size:24px;
-font-weight:bold;
+body{
+background:#000;
+color:#fff;
 }
 
-.container{
-max-width:1000px;
-margin:auto;
-padding:20px;
+header{
+
+position:fixed;
+top:0;
+left:0;
+right:0;
+
+background:#111;
+
+padding:15px;
+
+text-align:center;
+
+font-size:22px;
+
+font-weight:bold;
+
+z-index:99;
+
+}
+
+.player{
+
+margin-top:60px;
+
+width:100%;
+
+height:calc(100vh - 60px);
+
 }
 
 iframe{
+
 width:100%;
-height:70vh;
+
+height:100%;
+
 border:none;
-border-radius:12px;
-background:#000;
+
+}
+
+.bottom{
+
+position:fixed;
+
+bottom:15px;
+
+left:50%;
+
+transform:translateX(-50%);
+
+display:flex;
+
+gap:15px;
+
 }
 
 button{
-margin-top:20px;
-padding:12px 20px;
-background:#ff3b30;
+
+padding:12px 18px;
+
 border:none;
-color:white;
-font-size:16px;
+
 border-radius:8px;
+
+background:#ff3b30;
+
+color:#fff;
+
 cursor:pointer;
+
+font-size:16px;
+
 }
 
-button:hover{
-background:#ff2200;
-}
 </style>
 
 </head>
 
 <body>
 
-<header>🎬 Watch Video</header>
+<header>
 
-<div class="container">
+🎬 Watch Video
 
-<iframe id="player" allowfullscreen></iframe>
+</header>
 
-<br>
+<div class="player">
 
-<button onclick="history.back()">⬅ Back</button>
+<iframe
+id="player"
+allowfullscreen>
+
+</iframe>
+
+</div>
+
+<div class="bottom">
+
+<button onclick="history.back()">
+
+⬅ Back
+
+</button>
+
+<button onclick="share()">
+
+🔗 Share
+
+</button>
 
 </div>
 
 <script>
 
-const params = new URLSearchParams(location.search);
-let url = params.get("url");
+const params=new URLSearchParams(location.search);
 
-if(url){
+let url=params.get("url");
+
+if(!url){
+
+document.body.innerHTML="<h2 style='text-align:center;margin-top:120px'>No Video</h2>";
+
+}
+
+function convert(url){
 
 if(url.includes("watch?v=")){
-const id = url.split("watch?v=")[1].split("&")[0];
-url = "https://www.youtube.com/embed/" + id;
+
+const id=url.split("watch?v=")[1].split("&")[0];
+
+return "https://www.youtube.com/embed/"+id+"?autoplay=1";
+
 }
 
 if(url.includes("youtu.be/")){
-const id = url.split("youtu.be/")[1];
-url = "https://www.youtube.com/embed/" + id;
+
+const id=url.split("youtu.be/")[1];
+
+return "https://www.youtube.com/embed/"+id+"?autoplay=1";
+
 }
 
-document.getElementById("player").src = url;
+return url;
+
+}
+
+document.getElementById("player").src=convert(url);
+
+async function share(){
+
+if(navigator.share){
+
+await navigator.share({
+
+title:"Videos",
+
+url:url
+
+});
 
 }else{
 
-document.body.innerHTML="<h2 style='text-align:center;margin-top:100px'>No Video Found</h2>";
+navigator.clipboard.writeText(url);
+
+alert("Link copied");
+
+}
 
 }
 
