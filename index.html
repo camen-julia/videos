@@ -1,205 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Videos</title>
 
-<style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
-
-body{
-background:#111;
-color:#fff;
-}
-
-header{
-background:#e50914;
-padding:15px;
-text-align:center;
-font-size:28px;
-font-weight:bold;
-position:sticky;
-top:0;
-}
-
-.search{
-padding:15px;
-}
-
-.search input{
-width:100%;
-padding:12px;
-border:none;
-border-radius:8px;
-font-size:16px;
-}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
-gap:20px;
-padding:20px;
-}
-
-.card{
-background:#222;
-border-radius:12px;
-overflow:hidden;
-transition:.3s;
-}
-
-.card:hover{
-transform:scale(1.03);
-}
-
-.card img{
-width:100%;
-height:180px;
-object-fit:cover;
-}
-
-.info{
-padding:15px;
-}
-
-button{
-width:100%;
-padding:12px;
-border:none;
-background:#ff3b30;
-color:white;
-font-size:16px;
-cursor:pointer;
-margin-top:10px;
-border-radius:8px;
-}
-
-footer{
-padding:30px;
-text-align:center;
-color:#888;
-}
-</style>
+<link rel="stylesheet" href="style.css">
 
 </head>
 
 <body>
 
-<header>🎬 Videos</header>
+<header>
+    🎬 Videos
+</header>
 
-<div class="search">
-<input type="text" id="search" placeholder="Search videos...">
-</div>
+<div class="feed" id="videoList">
 
-<div class="grid" id="videoList"></div>
+    <!-- Video Card -->
 
-<footer>
-© 2026 Videos
-</footer>
+    <div class="video-card">
 
-<script type="module">
+        <iframe
+            src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+            allowfullscreen>
+        </iframe>
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+        <div class="overlay">
 
-import {
-getFirestore,
-collection,
-getDocs
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+            <h2>Loading...</h2>
 
-const firebaseConfig = {
+        </div>
 
-apiKey: "AIzaSyBUUyZ-NgqhvrLve4u7BpDKbt560P5UJgQ",
+        <div class="actions">
 
-authDomain: "videos-d583f.firebaseapp.com",
+            <button>❤️</button>
 
-projectId: "videos-d583f",
+            <span>0</span>
 
-storageBucket: "videos-d583f.firebasestorage.app",
+            <button>🔗</button>
 
-messagingSenderId: "1027579550246",
+            <button>👁️</button>
 
-appId: "1:1027579550246:web:3979429f01d4aa763b64e7"
+            <span>0</span>
 
-};
+        </div>
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+        <button class="watch-btn">
 
-const container=document.getElementById("videoList");
-const search=document.getElementById("search");
+            Watch
 
-let allVideos=[];
+        </button>
 
-async function loadVideos(){
-
-const snapshot=await getDocs(collection(db,"videos"));
-
-allVideos=snapshot.docs.map(doc=>doc.data());
-
-showVideos(allVideos);
-
-}
-
-function showVideos(videos){
-
-container.innerHTML="";
-
-videos.forEach(video=>{
-
-container.innerHTML+=`
-
-<div class="card">
-
-<img src="${video.thumbnail}" alt="${video.title}">
-
-<div class="info">
-
-<h3>${video.title}</h3>
-
-<p>${video.category}</p>
-
-<button onclick="location.href='watch.html?url='+encodeURIComponent('${video.videoUrl}')">
-
-Watch
-
-</button>
+    </div>
 
 </div>
 
-</div>
+<script type="module" src="firebase.js"></script>
 
-`;
-
-});
-
-}
-
-search.addEventListener("input",()=>{
-
-const keyword=search.value.toLowerCase();
-
-const filtered=allVideos.filter(video=>
-
-video.title.toLowerCase().includes(keyword) ||
-
-video.category.toLowerCase().includes(keyword)
-
-);
-
-showVideos(filtered);
-
-});
-
-loadVideos();
-
-</script>
+<script type="module" src="app.js"></script>
 
 </body>
 </html>
