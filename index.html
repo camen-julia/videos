@@ -4,59 +4,133 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Videos</title>
+
 <style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
 body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:#111;
-    color:#fff;
+background:#111;
+color:#fff;
 }
+
 header{
-    background:#e50914;
-    padding:15px;
-    text-align:center;
-    font-size:24px;
-    font-weight:bold;
+background:#e50914;
+padding:15px;
+text-align:center;
+font-size:28px;
+font-weight:bold;
+position:sticky;
+top:0;
 }
-.container{
-    padding:20px;
+
+.search{
+padding:15px;
 }
+
+.search input{
+width:100%;
+padding:12px;
+border:none;
+border-radius:8px;
+font-size:16px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+gap:20px;
+padding:20px;
+}
+
 .card{
-    background:#222;
-    border-radius:10px;
-    padding:15px;
-    margin-bottom:20px;
+background:#222;
+border-radius:12px;
+overflow:hidden;
+transition:.3s;
 }
+
+.card:hover{
+transform:scale(1.03);
+}
+
 .card img{
-    width:100%;
-    border-radius:10px;
+width:100%;
+height:180px;
+object-fit:cover;
 }
+
+.info{
+padding:15px;
+}
+
 button{
-    width:100%;
-    padding:12px;
-    border:none;
-    background:#e50914;
-    color:white;
-    border-radius:8px;
-    font-size:16px;
-    cursor:pointer;
+width:100%;
+padding:12px;
+border:none;
+background:#ff3b30;
+color:white;
+font-size:16px;
+cursor:pointer;
+margin-top:10px;
+border-radius:8px;
+}
+
+footer{
+padding:30px;
+text-align:center;
+color:#888;
 }
 </style>
+
 </head>
+
 <body>
 
-<header>🎥 Videos</header>
+<header>🎬 Videos</header>
 
-<div class="container">
+<div class="search">
+<input type="text" placeholder="Search videos...">
+</div>
+
+<div class="grid">
 
 <div class="card">
-<img src="https://via.placeholder.com/600x300.png?text=Video+Thumbnail">
-<h2>Welcome to Videos</h2>
-<p>Watch trending videos here.</p>
-<button>Watch Now</button>
+<img src="https://picsum.photos/500/300?1">
+<div class="info">
+<h3>Facebook Reel</h3>
+<p>Trending video</p>
+<button>Watch</button>
+</div>
+</div>
+
+<div class="card">
+<img src="https://picsum.photos/500/300?2">
+<div class="info">
+<h3>TikTok Video</h3>
+<p>Latest upload</p>
+<button>Watch</button>
+</div>
+</div>
+
+<div class="card">
+<img src="https://picsum.photos/500/300?3">
+<div class="info">
+<h3>Funny Video</h3>
+<p>Most viewed</p>
+<button>Watch</button>
+</div>
 </div>
 
 </div>
+
+<footer>
+© 2026 Videos
+</footer>
 
 </body>
 </html>
