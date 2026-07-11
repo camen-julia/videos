@@ -13,27 +13,24 @@ let videos = [];
 
 loadVideos();
 
-async function loadVideos(){
+async function loadVideos() {
 
-    const snapshot = await getDocs(collection(db,"videos"));
+    const snapshot = await getDocs(collection(db, "videos"));
 
-    videos = snapshot.docs.map(item=>({
-
-        id:item.id,
-
-        ...item.data()
-
+    videos = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
     }));
 
     renderVideos(videos);
 
 }
 
-function renderVideos(list){
+function renderVideos(list) {
 
     videoList.innerHTML = "";
 
-    list.forEach(video=>{
+    list.forEach(video => {
 
         videoList.innerHTML += createCard(video);
 
@@ -41,28 +38,41 @@ function renderVideos(list){
 
 }
 
-function createCard(video){
+function createCard(video) {
 
-return `
+    return `
 
 <div class="video-item">
 
-<img src="${video.thumbnail}" alt="${video.title}">
+<img
+src="${video.thumbnail}"
+alt="${video.title}"
+loading="lazy">
 
 <div class="actions">
 
-<button onclick="likeVideo('${video.id}')">❤️</button>
-<span>${video.likes||0}</span>
+<button onclick="likeVideo('${video.id}')">
+❤️
+</button>
 
-<button onclick="shareVideo('${video.videoUrl}')">🔗</button>
+<span>${video.likes || 0}</span>
 
-<button disabled>👁️</button>
-<span>${video.views||0}</span>
+<button onclick="shareVideo('${video.videoUrl}')">
+🔗
+</button>
+
+<button onclick="watchVideo('${video.id}','${video.videoUrl}')">
+▶️
+</button>
+
+<span>${video.views || 0}</span>
 
 </div>
 
 <div class="video-info">
+
 <h3>${video.title}</h3>
+
 </div>
 
 <button
@@ -78,20 +88,27 @@ onclick="watchVideo('${video.id}','${video.videoUrl}')">
 `;
 
 }
+
 window.likeVideo = async function(id){
 
     await updateDoc(doc(db,"videos",id),{
+
         likes:increment(1)
+
     });
 
-    const video = videos.find(v => v.id === id);
+    const video = videos.find(v=>v.id===id);
 
     if(video){
-        video.likes = (video.likes || 0) + 1;
+
+        video.likes++;
+
         renderVideos(videos);
+
     }
 
 }
+
 window.watchVideo = async function(id,url){
 
     await updateDoc(doc(db,"videos",id),{
@@ -100,6 +117,14 @@ window.watchVideo = async function(id,url){
 
     });
 
+    const video = videos.find(v=>v.id===id);
+
+    if(video){
+
+        video.views++;
+
+    }
+
     window.location.href =
         "watch.html?url=" + encodeURIComponent(url);
 
@@ -107,23 +132,31 @@ window.watchVideo = async function(id,url){
 
 window.shareVideo = async function(url){
 
-    if(navigator.share){
+    try{
 
-        await navigator.share({
+        if(navigator.share){
 
-            title:"Videos",
+            await navigator.share({
 
-            text:"Watch this video",
+                title:"Videos",
 
-            url:url
+                text:"Watch this video",
 
-        });
+                url:url
 
-    }else{
+            });
 
-        await navigator.clipboard.writeText(url);
+        }else{
 
-        alert("Video link copied");
+            await navigator.clipboard.writeText(url);
+
+            alert("Video link copied");
+
+        }
+
+    }catch(e){
+
+        console.log(e);
 
     }
 
