@@ -57,9 +57,6 @@ return `
 🔗
 </button>
 
-<button onclick="watchVideo('${video.id}','${video.videoUrl}')">
-▶️
-</button>
 
 <span>${video.views || 0}</span>
 
