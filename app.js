@@ -1,6 +1,37 @@
-function createCard(video){
+import {
+  db,
+  collection,
+  getDocs,
+  doc,
+  updateDoc,
+  increment
+} from "./firebase.js";
 
-return `
+const videoList = document.getElementById("videoList");
+
+loadVideos();
+
+async function loadVideos() {
+
+  videoList.innerHTML = "";
+
+  const snapshot = await getDocs(collection(db, "videos"));
+
+  snapshot.forEach(item => {
+
+    const video = item.data();
+
+    const id = item.id;
+
+    videoList.innerHTML += createCard(id, video);
+
+  });
+
+}
+
+function createCard(id, video) {
+
+  return `
 
 <div class="video-card">
 
@@ -17,11 +48,11 @@ alt="${video.title}">
 
 <div class="actions">
 
-<button onclick="likeVideo('${video.id}')">
+<button onclick="likeVideo('${id}')">
 ❤️
 </button>
 
-<span id="likes-${video.id}">
+<span id="likes-${id}">
 ${video.likes || 0}
 </span>
 
@@ -33,7 +64,7 @@ ${video.likes || 0}
 👁️
 </button>
 
-<span id="views-${video.id}">
+<span id="views-${id}">
 ${video.views || 0}
 </span>
 
@@ -41,14 +72,64 @@ ${video.views || 0}
 
 <button
 class="watch-btn"
-onclick="watchVideo('${video.id}','${video.videoUrl}')">
+onclick="watchVideo('${id}','${video.videoUrl}')">
 
-▶ Watch
+▶ Watch Video
 
 </button>
 
 </div>
 
 `;
+
+}
+
+window.likeVideo = async function(id){
+
+    await updateDoc(doc(db,"videos",id),{
+
+        likes:increment(1)
+
+    });
+
+    const like=document.getElementById("likes-"+id);
+
+    like.innerText=parseInt(like.innerText)+1;
+
+}
+
+window.watchVideo = async function(id,url){
+
+    await updateDoc(doc(db,"videos",id),{
+
+        views:increment(1)
+
+    });
+
+    location.href="watch.html?url="+encodeURIComponent(url);
+
+}
+
+window.shareVideo = async function(url){
+
+    if(navigator.share){
+
+        await navigator.share({
+
+            title:"Videos",
+
+            text:"Watch this video",
+
+            url:url
+
+        });
+
+    }else{
+
+        await navigator.clipboard.writeText(url);
+
+        alert("Video link copied");
+
+    }
 
 }
