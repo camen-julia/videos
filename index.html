@@ -154,7 +154,9 @@ const db = getFirestore(app);
 console.log("Firebase Connected!");
 
 const snapshot = await getDocs(collection(db, "videos"));
-console.log(snapshot.docs.map(doc => doc.data()));
+const videos = snapshot.docs.map(doc => doc.data());
+
+console.log(videos);
 </script>
 </body>
 </html>
