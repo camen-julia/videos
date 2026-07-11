@@ -165,7 +165,7 @@ container.innerHTML+=`
 
 <p>${video.category}</p>
 
-<button onclick="window.open('${video.videoUrl}','_blank')">
+<button onclick="location.href='watch.html?url='+encodeURIComponent('${video.videoUrl}')">
 
 Watch
 
