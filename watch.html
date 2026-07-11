@@ -136,11 +136,12 @@ function convert(url){
     return url;
 }
 
-console.log(url);
-console.log(convert(url));
+const embed = convert(url);
 
-document.getElementById("player").src = convert(url);
+console.log("URL =", url);
+console.log("Embed =", embed);
 
+document.getElementById("player").src = embed;
 async function shareVideo(){
 
 if(navigator.share){
