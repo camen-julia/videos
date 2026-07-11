@@ -94,69 +94,112 @@ color:#888;
 <header>🎬 Videos</header>
 
 <div class="search">
-<input type="text" placeholder="Search videos...">
+<input type="text" id="search" placeholder="Search videos...">
 </div>
 
-<div class="grid">
-
-<div class="card">
-<img src="https://picsum.photos/500/300?1">
-<div class="info">
-<h3>Facebook Reel</h3>
-<p>Trending video</p>
-<button>Watch</button>
-</div>
-</div>
-
-<div class="card">
-<img src="https://picsum.photos/500/300?2">
-<div class="info">
-<h3>TikTok Video</h3>
-<p>Latest upload</p>
-<button>Watch</button>
-</div>
-</div>
-
-<div class="card">
-<img src="https://picsum.photos/500/300?3">
-<div class="info">
-<h3>Funny Video</h3>
-<p>Most viewed</p>
-<button onclick="location.href='watch.html'">Watch</button>
-</div>
-</div>
-
-</div>
+<div class="grid" id="videoList"></div>
 
 <footer>
 © 2026 Videos
 </footer>
+
 <script type="module">
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+
 import {
-  getFirestore,
-  collection,
-  getDocs
+getFirestore,
+collection,
+getDocs
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBUUyZ-NgqhvrLve4u7BpDKbt560P5UJgQ",
-  authDomain: "videos-d583f.firebaseapp.com",
-  projectId: "videos-d583f",
-  storageBucket: "videos-d583f.firebasestorage.app",
-  messagingSenderId: "1027579550246",
-  appId: "1:1027579550246:web:3979429f01d4aa763b64e7"
+
+apiKey: "AIzaSyBUUyZ-NgqhvrLve4u7BpDKbt560P5UJgQ",
+
+authDomain: "videos-d583f.firebaseapp.com",
+
+projectId: "videos-d583f",
+
+storageBucket: "videos-d583f.firebasestorage.app",
+
+messagingSenderId: "1027579550246",
+
+appId: "1:1027579550246:web:3979429f01d4aa763b64e7"
+
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-console.log("Firebase Connected!");
+const container=document.getElementById("videoList");
+const search=document.getElementById("search");
 
-const snapshot = await getDocs(collection(db, "videos"));
-const videos = snapshot.docs.map(doc => doc.data());
+let allVideos=[];
 
-console.log(videos);
+async function loadVideos(){
+
+const snapshot=await getDocs(collection(db,"videos"));
+
+allVideos=snapshot.docs.map(doc=>doc.data());
+
+showVideos(allVideos);
+
+}
+
+function showVideos(videos){
+
+container.innerHTML="";
+
+videos.forEach(video=>{
+
+container.innerHTML+=`
+
+<div class="card">
+
+<img src="${video.thumbnail}" alt="${video.title}">
+
+<div class="info">
+
+<h3>${video.title}</h3>
+
+<p>${video.category}</p>
+
+<button onclick="window.open('${video.videoUrl}','_blank')">
+
+Watch
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+search.addEventListener("input",()=>{
+
+const keyword=search.value.toLowerCase();
+
+const filtered=allVideos.filter(video=>
+
+video.title.toLowerCase().includes(keyword) ||
+
+video.category.toLowerCase().includes(keyword)
+
+);
+
+showVideos(filtered);
+
+});
+
+loadVideos();
+
 </script>
+
 </body>
 </html>
