@@ -122,7 +122,16 @@ header{
     font-weight:bold;
     text-shadow:0 0 8px #000;
 }
+.actions button:disabled{
+    background:rgba(0,0,0,.55);
+    cursor:default;
+    opacity:1;
+}
 
+.actions button:disabled:hover{
+    background:rgba(0,0,0,.55);
+    transform:none;
+}
 .watch-btn{
     position:absolute;
     left:50%;
