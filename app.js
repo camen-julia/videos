@@ -9,127 +9,88 @@ import {
 
 const videoList = document.getElementById("videoList");
 
+let videos = [];
+
 loadVideos();
 
-async function loadVideos() {
+async function loadVideos(){
 
-  videoList.innerHTML = "";
+    const snapshot = await getDocs(collection(db,"videos"));
 
-  const snapshot = await getDocs(collection(db, "videos"));
+    videos = snapshot.docs.map(item=>({
 
-  snapshot.forEach(item => {
+        id:item.id,
 
-    const video = item.data();
+        ...item.data()
 
-    const id = item.id;
+    }));
 
-    videoList.innerHTML += createCard(id, video);
-
-  });
+    renderVideos(videos);
 
 }
 
-function createCard(id, video) {
+function renderVideos(list){
 
-  return `
+    videoList.innerHTML = "";
 
-<div class="video-card">
+    list.forEach(video=>{
+
+        videoList.innerHTML += createCard(video);
+
+    });
+
+}
+
+function createCard(video){
+
+    return `
+
+<div class="video-item">
 
 <img
-class="thumb"
 src="${video.thumbnail}"
 alt="${video.title}">
 
-<div class="overlay">
+<div class="video-info">
 
-<h2>${video.title}</h2>
+<h3>${video.title}</h3>
 
-</div>
+<p>❤️ ${video.likes || 0}</p>
+
+<p>👁️ ${video.views || 0}</p>
 
 <div class="actions">
 
-<button onclick="likeVideo('${id}')">
-❤️
+<button
+class="edit-btn"
+onclick="likeVideo('${video.id}')">
+
+❤️ Like
+
 </button>
 
-<span id="likes-${id}">
-${video.likes || 0}
-</span>
+<button
+class="edit-btn"
+onclick="shareVideo('${video.videoUrl}')">
 
-<button onclick="shareVideo('${video.videoUrl}')">
-🔗
+🔗 Share
+
 </button>
 
-<button disabled>
-👁️
-</button>
+<button
+class="delete-btn"
+onclick="watchVideo('${video.id}','${video.videoUrl}')">
 
-<span id="views-${id}">
-${video.views || 0}
-</span>
+▶ Watch
+
+</button>
 
 </div>
 
-<button
-class="watch-btn"
-onclick="watchVideo('${id}','${video.videoUrl}')">
-
-▶ Watch Video
-
-</button>
+</div>
 
 </div>
 
 `;
-
-}
-
-window.likeVideo = async function(id){
-
-    await updateDoc(doc(db,"videos",id),{
-
-        likes:increment(1)
-
-    });
-
-    const like=document.getElementById("likes-"+id);
-
-    like.innerText=parseInt(like.innerText)+1;
-
-}
-
-window.watchVideo = async function(id,url){
-
-    await updateDoc(doc(db,"videos",id),{
-
-        views:increment(1)
-
-    });
-
-    location.href="watch.html?url="+encodeURIComponent(url);
-
-}
-
-window.shareVideo = async function(url){
-
-    if(navigator.share){
-
-        await navigator.share({
-
-            title:"Videos",
-
-            text:"Watch this video",
-
-            url:url
-
-        });
-
-    }else{
-
-        await navigator.clipboard.writeText(url);
-
-        alert("Video link copied");
-
-    }
 
 }
