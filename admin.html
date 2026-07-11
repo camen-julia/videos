@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Panel</title>
+
+<style>
+body{
+font-family:Arial;
+background:#111;
+color:#fff;
+margin:0;
+padding:20px;
+}
+
+h2{
+text-align:center;
+}
+
+input{
+width:100%;
+padding:12px;
+margin:10px 0;
+border-radius:8px;
+border:none;
+}
+
+button{
+width:100%;
+padding:12px;
+background:#ff3b30;
+color:white;
+border:none;
+border-radius:8px;
+font-size:18px;
+cursor:pointer;
+}
+</style>
+
+</head>
+
+<body>
+
+<h2>🎬 Admin Panel</h2>
+
+<input id="title" placeholder="Video Title">
+
+<input id="thumb" placeholder="Thumbnail URL">
+
+<input id="video" placeholder="Video Link">
+
+<button onclick="saveVideo()">
+Save Video
+</button>
+
+<script>
+
+function saveVideo(){
+
+let data={
+title:document.getElementById("title").value,
+thumb:document.getElementById("thumb").value,
+video:document.getElementById("video").value
+};
+
+localStorage.setItem("video",JSON.stringify(data));
+
+alert("Saved");
+
+}
+
+</script>
+
+</body>
+</html>
