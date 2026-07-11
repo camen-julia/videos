@@ -1,49 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1.0">
+
 <title>Video Admin</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
-body{background:#111;color:#fff;padding:20px}
-.container{max-width:900px;margin:auto}
-h1{text-align:center;margin-bottom:20px}
-.card{background:#222;padding:20px;border-radius:12px;margin-bottom:20px}
-input{width:100%;padding:12px;margin:10px 0;border:none;border-radius:8px;font-size:16px}
-button{border:none;border-radius:8px;cursor:pointer}
-#saveBtn{width:100%;padding:14px;background:#ff3b30;color:#fff;font-size:18px}
-#status{margin-top:15px;text-align:center;color:#00ff99}
-.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin:20px 0}
-.box{background:#222;padding:15px;border-radius:10px;text-align:center}
-#videoList{display:flex;flex-direction:column;gap:15px}
-.video-item{display:flex;gap:15px;background:#222;padding:12px;border-radius:10px}
-.video-item img{width:140px;height:80px;object-fit:cover;border-radius:8px}
-.actions{display:flex;gap:10px;margin-top:10px}
-.edit-btn{background:#2196F3;color:#fff;padding:8px 14px}
-.delete-btn{background:#f44336;color:#fff;padding:8px 14px}
-</style>
+
+<link rel="stylesheet" href="style.css">
+
 </head>
+
 <body>
+
 <div class="container">
+
 <h1>🎬 Video Admin</h1>
+
 <div class="card">
-<input id="title" type="text" placeholder="Video Title">
-<input id="videoUrl" type="text" placeholder="YouTube URL">
-<button id="saveBtn">💾 Save Video</button>
-<div id="status"></div>
+
+<input
+id="title"
+type="text"
+placeholder="Video Title">
+
+<input
+id="videoUrl"
+type="text"
+placeholder="https://youtube.com/...">
+
+<button id="saveBtn">
+
+💾 Save Video
+
+</button>
+
+<p id="status"></p>
+
 </div>
 
 <div class="summary">
-<div class="box"><h3>Total Videos</h3><p id="totalVideos">0</p></div>
-<div class="box"><h3>Total Likes</h3><p id="totalLikes">0</p></div>
-<div class="box"><h3>Total Views</h3><p id="totalViews">0</p></div>
+
+<div class="box">
+
+<h3>Total Videos</h3>
+
+<p id="totalVideos">0</p>
+
 </div>
 
-<input id="search" type="text" placeholder="Search video...">
+<div class="box">
+
+<h3>Total Likes</h3>
+
+<p id="totalLikes">0</p>
+
+</div>
+
+<div class="box">
+
+<h3>Total Views</h3>
+
+<p id="totalViews">0</p>
+
+</div>
+
+</div>
+
+<div class="search">
+
+<input
+id="search"
+type="text"
+placeholder="Search...">
+
+</div>
+
 <div id="videoList"></div>
 
-<script type="module" src="admin.js"></script>
 </div>
+
+<script type="module" src="admin.js"></script>
+
 </body>
+
 </html>
