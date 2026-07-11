@@ -17,13 +17,12 @@ async function loadVideos() {
 
     const snapshot = await getDocs(collection(db, "videos"));
 
-    videos = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
+    videos = snapshot.docs.map(item => ({
+        id: item.id,
+        ...item.data()
     }));
 
     renderVideos(videos);
-
 }
 
 function renderVideos(list) {
@@ -48,20 +47,28 @@ return `
 
 <div class="actions">
 
-<button onclick="likeVideo('${video.id}')">❤️</button>
+<button onclick="likeVideo('${video.id}')">
+❤️
+</button>
+
 <span>${video.likes || 0}</span>
 
-<button onclick="shareVideo('${video.videoUrl}')">🔗</button>
+<button onclick="shareVideo('${video.videoUrl}')">
+🔗
+</button>
 
-<button onclick="watchVideo('${video.id}','${video.videoUrl}')">▶️</button>
+<button onclick="watchVideo('${video.id}','${video.videoUrl}')">
+▶️
+</button>
 
-<button disabled>👁️</button>
 <span>${video.views || 0}</span>
 
 </div>
 
 <div class="video-info">
+
 <h3>${video.title}</h3>
+
 </div>
 
 <button
@@ -80,19 +87,27 @@ onclick="watchVideo('${video.id}','${video.videoUrl}')">
 
 window.likeVideo = async function(id){
 
-    await updateDoc(doc(db,"videos",id),{
+    try{
 
-        likes:increment(1)
+        await updateDoc(doc(db,"videos",id),{
 
-    });
+            likes:increment(1)
 
-    const video = videos.find(v=>v.id===id);
+        });
 
-    if(video){
+        const video = videos.find(v=>v.id===id);
 
-        video.likes++;
+        if(video){
 
-        renderVideos(videos);
+            video.likes = (video.likes || 0) + 1;
+
+            renderVideos(videos);
+
+        }
+
+    }catch(e){
+
+        console.log(e);
 
     }
 
@@ -100,22 +115,30 @@ window.likeVideo = async function(id){
 
 window.watchVideo = async function(id,url){
 
-    await updateDoc(doc(db,"videos",id),{
+    try{
 
-        views:increment(1)
+        await updateDoc(doc(db,"videos",id),{
 
-    });
+            views:increment(1)
 
-    const video = videos.find(v=>v.id===id);
+        });
 
-    if(video){
+        const video = videos.find(v=>v.id===id);
 
-        video.views++;
+        if(video){
+
+            video.views = (video.views || 0) + 1;
+
+        }
+
+    }catch(e){
+
+        console.log(e);
 
     }
 
     window.location.href =
-        "watch.html?url=" + encodeURIComponent(url);
+    "watch.html?url=" + encodeURIComponent(url);
 
 }
 
