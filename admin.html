@@ -20,11 +20,11 @@ padding:20px;
 }
 
 .container{
-max-width:600px;
+max-width:700px;
 margin:auto;
 }
 
-h1{
+h1,h2{
 text-align:center;
 margin-bottom:20px;
 }
@@ -55,32 +55,74 @@ background:#ff2200;
 
 #status{
 margin-top:20px;
+margin-bottom:20px;
 text-align:center;
 font-size:18px;
 color:#00ff99;
 }
+
+.video-item{
+background:#222;
+padding:15px;
+border-radius:10px;
+margin:10px 0;
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+.video-item img{
+width:120px;
+height:70px;
+object-fit:cover;
+border-radius:8px;
+}
+
+.video-info{
+flex:1;
+}
+
+.video-info h3{
+margin-bottom:5px;
+}
+
+.delete-btn{
+width:auto;
+padding:8px 15px;
+background:red;
+font-size:14px;
+}
+
+.delete-btn:hover{
+background:#b00000;
+}
 </style>
 
 </head>
+
 <body>
 
 <div class="container">
 
-<h1>Admin Panel</h1>
+<h1>🎬 Admin Panel</h1>
 
-<input type="text" id="title" placeholder="Video Title">
+<input id="title" placeholder="Video Title">
 
-<input type="text" id="category" placeholder="Category">
+<input id="category" placeholder="Category">
 
-<input type="text" id="thumbnail" placeholder="Thumbnail Image URL">
+<input id="thumbnail" placeholder="Thumbnail Image URL">
 
-<input type="text" id="videoUrl" placeholder="Video URL">
+<input id="videoUrl" placeholder="Video URL">
 
-<button id="saveBtn">
-Save Video
-</button>
+<button id="saveBtn">Save Video</button>
 
 <div id="status"></div>
+
+<hr style="margin:30px 0">
+
+<h2>Video List</h2>
+
+<div id="videoList"></div>
 
 </div>
 
@@ -91,30 +133,76 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebas
 import {
 getFirestore,
 collection,
-addDoc
+addDoc,
+getDocs,
+deleteDoc,
+doc
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
+apiKey:"AIzaSyBUUyZ-NgqhvrLve4u7BpDKbt560P5UJgQ",
+authDomain:"videos-d583f.firebaseapp.com",
+projectId:"videos-d583f",
+storageBucket:"videos-d583f.firebasestorage.app",
+messagingSenderId:"1027579550246",
+appId:"1:1027579550246:web:3979429f01d4aa763b64e7"
+};
 
-apiKey: "AIzaSyBUUyZ-NgqhvrLve4u7BpDKbt560P5UJgQ",
+const app=initializeApp(firebaseConfig);
 
-authDomain: "videos-d583f.firebaseapp.com",
+const db=getFirestore(app);
 
-projectId: "videos-d583f",
+const videoList=document.getElementById("videoList");
 
-storageBucket: "videos-d583f.firebasestorage.app",
+async function loadVideos(){
 
-messagingSenderId: "1027579550246",
+const snapshot=await getDocs(collection(db,"videos"));
 
-appId: "1:1027579550246:web:3979429f01d4aa763b64e7"
+videoList.innerHTML="";
+
+snapshot.forEach((item)=>{
+
+const video=item.data();
+
+videoList.innerHTML+=`
+
+<div class="video-item">
+
+<img src="${video.thumbnail}" alt="">
+
+<div class="video-info">
+
+<h3>${video.title}</h3>
+
+<p>${video.category}</p>
+
+</div>
+
+<button class="delete-btn" onclick="deleteVideo('${item.id}')">
+
+Delete
+
+</button>
+
+</div>
+
+`;
+
+});
+
+}
+
+window.deleteVideo=async(id)=>{
+
+if(!confirm("Delete this video?")) return;
+
+await deleteDoc(doc(db,"videos",id));
+
+loadVideos();
 
 };
 
-const app = initializeApp(firebaseConfig);
-
-const db = getFirestore(app);
-
-document.getElementById("saveBtn").onclick = async ()=>{
+document.getElementById("saveBtn").onclick=async()=>{
 
 const title=document.getElementById("title").value.trim();
 
@@ -156,6 +244,8 @@ document.getElementById("thumbnail").value="";
 
 document.getElementById("videoUrl").value="";
 
+loadVideos();
+
 }catch(e){
 
 console.error(e);
@@ -165,6 +255,8 @@ document.getElementById("status").innerHTML="❌ "+e.message;
 }
 
 };
+
+loadVideos();
 
 </script>
 
