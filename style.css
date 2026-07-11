@@ -12,8 +12,7 @@ body{
     background:#000;
     color:#fff;
     overflow-x:hidden;
-    overflow-y:scroll;
-    scroll-snap-type:y mandatory;
+    overflow-y:auto;
     scroll-behavior:smooth;
 }
 
@@ -22,71 +21,74 @@ header{
     top:0;
     left:0;
     right:0;
-    z-index:100;
-    text-align:center;
-    padding:15px;
-    background:rgba(0,0,0,.6);
-    backdrop-filter:blur(8px);
+    height:60px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(0,0,0,.7);
+    backdrop-filter:blur(10px);
+    z-index:1000;
     font-size:24px;
     font-weight:bold;
 }
 
 .feed{
     margin-top:60px;
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+    padding:20px;
 }
 
 .video-card{
     position:relative;
     width:100%;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    scroll-snap-align:start;
+    max-width:420px;
+    margin:auto;
+    background:#111;
+    border-radius:18px;
     overflow:hidden;
+    box-shadow:0 5px 20px rgba(0,0,0,.4);
 }
 
 .thumb{
     width:100%;
-    height:100%;
+    aspect-ratio:9/16;
     object-fit:cover;
+    display:block;
 }
 
 .overlay{
     position:absolute;
     left:15px;
-    bottom:20px;
-    z-index:10;
+    bottom:15px;
+    right:15px;
 }
 
 .overlay h2{
     font-size:20px;
-    margin-bottom:8px;
-}
-
-.overlay p{
-    color:#ccc;
+    text-shadow:0 2px 5px rgba(0,0,0,.8);
 }
 
 .actions{
     position:absolute;
-    right:15px;
-    bottom:90px;
+    right:12px;
+    bottom:80px;
     display:flex;
     flex-direction:column;
-    gap:15px;
-    z-index:10;
+    gap:12px;
+    align-items:center;
 }
 
 .actions button{
-    width:60px;
-    height:60px;
-    border-radius:50%;
+    width:52px;
+    height:52px;
     border:none;
+    border-radius:50%;
+    background:rgba(0,0,0,.65);
+    color:#fff;
     font-size:22px;
     cursor:pointer;
-    background:#222;
-    color:#fff;
 }
 
 .actions button:hover{
@@ -94,21 +96,20 @@ header{
 }
 
 .actions span{
-    text-align:center;
     font-size:14px;
+    font-weight:bold;
 }
 
 .watch-btn{
-    position:absolute;
-    bottom:20px;
-    right:20px;
-    padding:12px 18px;
-    background:#ff3b30;
+    width:calc(100% - 30px);
+    margin:15px;
+    padding:14px;
     border:none;
-    border-radius:8px;
+    border-radius:10px;
+    background:#ff3b30;
     color:#fff;
+    font-size:18px;
     cursor:pointer;
-    z-index:10;
 }
 
 .watch-btn:hover{
