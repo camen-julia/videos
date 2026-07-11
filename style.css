@@ -5,10 +5,16 @@
     font-family:Arial,sans-serif;
 }
 
+html,
 body{
+    width:100%;
+    height:100%;
     background:#000;
     color:#fff;
     overflow-x:hidden;
+    overflow-y:scroll;
+    scroll-snap-type:y mandatory;
+    scroll-behavior:smooth;
 }
 
 header{
@@ -31,11 +37,13 @@ header{
 
 .video-card{
     position:relative;
+    width:100%;
     height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
     scroll-snap-align:start;
+    overflow:hidden;
 }
 
 .video-card iframe{
@@ -48,6 +56,7 @@ header{
     position:absolute;
     left:15px;
     bottom:20px;
+    z-index:10;
 }
 
 .overlay h2{
@@ -66,6 +75,7 @@ header{
     display:flex;
     flex-direction:column;
     gap:15px;
+    z-index:10;
 }
 
 .actions button{
@@ -77,6 +87,10 @@ header{
     cursor:pointer;
     background:#222;
     color:#fff;
+}
+
+.actions button:hover{
+    background:#ff3b30;
 }
 
 .actions span{
@@ -94,8 +108,9 @@ header{
     border-radius:8px;
     color:#fff;
     cursor:pointer;
+    z-index:10;
 }
 
-.feed{
-    scroll-snap-type:y mandatory;
+.watch-btn:hover{
+    background:#ff2200;
 }
