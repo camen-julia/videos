@@ -1,39 +1,400 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Videos</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="stylesheet" href="style.css">
+<title>Video Admin</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#111;
+    color:#fff;
+    padding:20px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+}
+
+h1{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.card{
+    background:#222;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:20px;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    margin:10px 0;
+    font-size:16px;
+}
+
+button{
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+#saveBtn{
+    width:100%;
+    padding:14px;
+    background:#ff3b30;
+    color:#fff;
+    font-size:18px;
+}
+
+#saveBtn:hover{
+    background:#e53935;
+}
+
+#status{
+    margin-top:15px;
+    text-align:center;
+    color:#00ff99;
+    font-weight:bold;
+}
+
+h2{
+    margin:20px 0;
+}
+
+.video-item{
+    display:flex;
+    gap:15px;
+    align-items:center;
+    background:#222;
+    padding:12px;
+    border-radius:10px;
+    margin-bottom:15px;
+}
+
+.video-item img{
+    width:140px;
+    height:80px;
+    object-fit:cover;
+    border-radius:8px;
+}
+
+.video-info{
+    flex:1;
+}
+
+.video-info h3{
+    margin-bottom:8px;
+}
+
+.video-info p{
+    color:#bbb;
+    margin:3px 0;
+}
+
+.actions{
+    display:flex;
+    gap:10px;
+    margin-top:10px;
+}
+
+.edit-btn{
+
+    background:#2196F3;
+    color:white;
+    padding:8px 15px;
+
+}
+
+.edit-btn:hover{
+
+    background:#1565c0;
+
+}
+
+.delete-btn{
+
+    background:#f44336;
+    color:white;
+    padding:8px 15px;
+
+}
+
+.delete-btn:hover{
+
+    background:#c62828;
+
+}
+
+.search{
+
+    margin:20px 0;
+
+}
+
+.search input{
+
+    margin:0;
+
+}
+
+.summary{
+
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-bottom:20px;
+
+}
+
+.box{
+
+    background:#222;
+    padding:15px;
+    border-radius:10px;
+    text-align:center;
+
+}
+
+.box h3{
+
+    margin-bottom:8px;
+
+}
+
+.box p{
+
+    font-size:24px;
+    color:#ff3b30;
+
+}
+
+@media(max-width:700px){
+
+.summary{
+
+grid-template-columns:1fr;
+
+}
+
+.video-item{
+
+flex-direction:column;
+align-items:flex-start;
+
+}
+
+.video-item img{
+
+width:100%;
+height:200px;
+
+}
+
+}
+
+</style>
 
 </head>
+
 <body>
 
-<header>
-    🎬 Videos
-</header>
+<div class="container">
 
-<div id="videoList" class="feed">
+<h1>🎬 Video Admin</h1>
+
+<div class="card">
+
+<input
+id="title"
+type="text"
+placeholder="Video Title">
+
+<input
+id="videoUrl"
+type="text"
+placeholder="YouTube URL">
+
+<button id="saveBtn">
+
+💾 Save Video
+
+</button>
+
+<div id="status"></div>
 
 </div>
 
+<div class="summary">
+
+<div class="box">
+
+<h3>Total Videos</h3>
+
+<p id="totalVideos">0</p>
+
+</div>
+
+<div class="box">
+
+<h3>Total Likes</h3>
+
+<p id="totalLikes">0</p>
+
+</div>
+
+<div class="box">
+
+<h3>Total Views</h3>
+
+<p id="totalViews">0</p>
+
+</div>
+
+</div>
+
+<div class="search">
+
+<input
+id="search"
+type="text"
+placeholder="Search video...">
+
+</div>
+
+<h2>📃 All Videos</h2>
+
+<div id="videoList">
+
+</div>
 <script type="module">
 
 import {
     db,
     collection,
     getDocs,
-    doc,
+    addDoc,
     updateDoc,
-    increment
+    deleteDoc,
+    doc
 } from "./firebase.js";
 
+const title = document.getElementById("title");
+const videoUrl = document.getElementById("videoUrl");
+const saveBtn = document.getElementById("saveBtn");
+const status = document.getElementById("status");
 const videoList = document.getElementById("videoList");
 
-let videos=[];
+const totalVideos = document.getElementById("totalVideos");
+const totalLikes = document.getElementById("totalLikes");
+const totalViews = document.getElementById("totalViews");
+
+const search = document.getElementById("search");
+
+let videos = [];
+let editId = null;
 
 loadVideos();
+
+function getYoutubeThumbnail(url){
+
+    let id="";
+
+    if(url.includes("watch?v=")){
+        id=url.split("watch?v=")[1].split("&")[0];
+    }
+    else if(url.includes("youtu.be/")){
+        id=url.split("youtu.be/")[1].split("?")[0];
+    }
+    else if(url.includes("shorts/")){
+        id=url.split("shorts/")[1].split("?")[0];
+    }
+
+    return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+
+}
+
+saveBtn.onclick = async ()=>{
+
+    if(!title.value || !videoUrl.value){
+
+        alert("Please enter Title and YouTube URL");
+
+        return;
+
+    }
+
+    const data={
+
+        title:title.value.trim(),
+
+        videoUrl:videoUrl.value.trim(),
+
+        thumbnail:getYoutubeThumbnail(videoUrl.value.trim())
+
+    };
+
+    if(editId){
+
+        await updateDoc(doc(db,"videos",editId),{
+
+            title:data.title,
+
+            videoUrl:data.videoUrl,
+
+            thumbnail:data.thumbnail
+
+        });
+
+        editId=null;
+
+        saveBtn.innerHTML="💾 Save Video";
+
+        status.innerHTML="✅ Video Updated";
+
+    }else{
+
+        await addDoc(collection(db,"videos"),{
+
+            ...data,
+
+            likes:0,
+
+            views:0
+
+        });
+
+        status.innerHTML="✅ Video Saved";
+
+    }
+
+    title.value="";
+    videoUrl.value="";
+
+    setTimeout(()=>{
+
+        status.innerHTML="";
+
+    },2000);
+
+    loadVideos();
+
+};
 
 async function loadVideos(){
 
@@ -41,176 +402,139 @@ async function loadVideos(){
 
     const snapshot=await getDocs(collection(db,"videos"));
 
-    videos=[];
+    videos=snapshot.docs.map(d=>({
 
-    snapshot.forEach(item=>{
+        id:d.id,
 
-        videos.push({
-            id:item.id,
-            ...item.data()
-        });
+        ...d.data()
 
-    });
+    }));
+
+    let likeCount=0;
+    let viewCount=0;
 
     videos.forEach(video=>{
 
-        videoList.innerHTML+=createCard(video);
+        likeCount += video.likes || 0;
+
+        viewCount += video.views || 0;
 
     });
 
+    totalVideos.innerHTML = videos.length;
+
+    totalLikes.innerHTML = likeCount;
+
+    totalViews.innerHTML = viewCount;
+
+    showVideos(videos);
+
 }
+  function showVideos(list){
 
-function createCard(video){
+    videoList.innerHTML = "";
 
-    const youtubeId=getYoutubeId(video.videoUrl);
+    list.forEach(video=>{
 
-    return`
+        videoList.innerHTML += `
 
-<div class="video-card">
+<div class="video-item">
 
-<iframe
-src="https://www.youtube.com/embed/${youtubeId}?enablejsapi=1&playsinline=1&rel=0"
-allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-allowfullscreen>
-</iframe>
+<img src="${video.thumbnail}" alt="${video.title}">
 
-<div class="overlay">
+<div class="video-info">
 
-<h2>${video.title}</h2>
+<h3>${video.title}</h3>
 
-</div>
+<p>❤️ ${video.likes || 0}</p>
+
+<p>👁️ ${video.views || 0}</p>
 
 <div class="actions">
 
-<button onclick="likeVideo('${video.id}')">
-❤️
+<button
+class="edit-btn"
+onclick="globalThis.editVideo('${video.id}')">
+
+✏️ Edit
+
 </button>
 
-<span id="likes-${video.id}">
-${video.likes||0}
-</span>
+<button
+class="delete-btn"
+onclick="globalThis.deleteVideo('${video.id}')">
 
-<button onclick="shareVideo('${video.videoUrl}')">
-🔗
+🗑 Delete
+
 </button>
-
-<button disabled>
-👁️
-</button>
-
-<span id="views-${video.id}">
-${video.views||0}
-</span>
 
 </div>
 
-<button
-class="watch-btn"
-onclick="watchVideo('${video.id}','${video.videoUrl}')">
-
-Watch
-
-</button>
+</div>
 
 </div>
 
 `;
 
-}
-
-function getYoutubeId(url){
-
-    if(url.includes("watch?v=")){
-
-        return url.split("watch?v=")[1].split("&")[0];
-
-    }
-
-    if(url.includes("youtu.be/")){
-
-        return url.split("youtu.be/")[1].split("?")[0];
-
-    }
-
-    return "";
-
-}
-
-window.likeVideo=async function(id){
-
-    await updateDoc(doc(db,"videos",id),{
-
-        likes:increment(1)
-
     });
 
-    const like=document.getElementById("likes-"+id);
-
-    like.innerText=parseInt(like.innerText)+1;
-
 }
 
-window.watchVideo=async function(id,url){
+search.addEventListener("input",()=>{
 
-    await updateDoc(doc(db,"videos",id),{
+    const keyword = search.value.toLowerCase().trim();
 
-        views:increment(1)
+    const result = videos.filter(video=>
 
-    });
+        video.title.toLowerCase().includes(keyword)
 
-    location.href="watch.html?url="+encodeURIComponent(url);
+    );
 
-}
+    showVideos(result);
 
-window.shareVideo=async function(url){
-
-    if(navigator.share){
-
-        await navigator.share({
-
-            title:"Videos",
-
-            text:"Watch this video",
-
-            url:url
-
-        });
-
-    }else{
-
-        await navigator.clipboard.writeText(url);
-
-        alert("Video link copied");
-
-    }
-
-}
-
-const observer=new IntersectionObserver(entries=>{
-
-    entries.forEach(entry=>{
-
-        if(entry.isIntersecting){
-
-            entry.target.classList.add("active");
-
-        }
-
-    });
-
-},{
-    threshold:0.8
 });
 
-setTimeout(()=>{
+globalThis.editVideo = function(id){
 
-    document.querySelectorAll(".video-card").forEach(card=>{
+    const video = videos.find(v=>v.id===id);
 
-        observer.observe(card);
+    if(!video) return;
+
+    editId = id;
+
+    title.value = video.title;
+
+    videoUrl.value = video.videoUrl;
+
+    saveBtn.innerHTML = "💾 Update Video";
+
+    window.scrollTo({
+
+        top:0,
+
+        behavior:"smooth"
 
     });
 
-},1000);
+}
+
+globalThis.deleteVideo = async function(id){
+
+    if(!confirm("Delete this video?")) return;
+
+    await deleteDoc(doc(db,"videos",id));
+
+    status.innerHTML="🗑 Video Deleted";
+
+    setTimeout(()=>{
+
+        status.innerHTML="";
+
+    },2000);
+
+    loadVideos();
+
+}
 
 </script>
 
