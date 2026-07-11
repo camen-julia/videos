@@ -94,3 +94,51 @@ onclick="watchVideo('${video.id}','${video.videoUrl}')">
 `;
 
 }
+window.likeVideo = async function(id){
+
+    await updateDoc(doc(db,"videos",id),{
+
+        likes:increment(1)
+
+    });
+
+    loadVideos();
+
+}
+
+window.watchVideo = async function(id,url){
+
+    await updateDoc(doc(db,"videos",id),{
+
+        views:increment(1)
+
+    });
+
+    window.location.href =
+        "watch.html?url=" + encodeURIComponent(url);
+
+}
+
+window.shareVideo = async function(url){
+
+    if(navigator.share){
+
+        await navigator.share({
+
+            title:"Videos",
+
+            text:"Watch this video",
+
+            url:url
+
+        });
+
+    }else{
+
+        await navigator.clipboard.writeText(url);
+
+        alert("Video link copied");
+
+    }
+
+}
