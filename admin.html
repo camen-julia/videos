@@ -2,28 +2,40 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Panel</title>
 
 <style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
 body{
-font-family:Arial;
 background:#111;
 color:#fff;
-margin:0;
 padding:20px;
 }
 
-h2{
+.container{
+max-width:600px;
+margin:auto;
+}
+
+h1{
 text-align:center;
+margin-bottom:20px;
 }
 
 input{
 width:100%;
 padding:12px;
 margin:10px 0;
-border-radius:8px;
 border:none;
+border-radius:8px;
+font-size:16px;
 }
 
 button{
@@ -36,39 +48,123 @@ border-radius:8px;
 font-size:18px;
 cursor:pointer;
 }
+
+button:hover{
+background:#ff2200;
+}
+
+#status{
+margin-top:20px;
+text-align:center;
+font-size:18px;
+color:#00ff99;
+}
 </style>
 
 </head>
-
 <body>
 
-<h2>🎬 Admin Panel</h2>
+<div class="container">
 
-<input id="title" placeholder="Video Title">
+<h1>Admin Panel</h1>
 
-<input id="thumb" placeholder="Thumbnail URL">
+<input type="text" id="title" placeholder="Video Title">
 
-<input id="video" placeholder="Video Link">
+<input type="text" id="category" placeholder="Category">
 
-<button onclick="saveVideo()">
+<input type="text" id="thumbnail" placeholder="Thumbnail Image URL">
+
+<input type="text" id="videoUrl" placeholder="Video URL">
+
+<button id="saveBtn">
 Save Video
 </button>
 
-<script>
+<div id="status"></div>
 
-function saveVideo(){
+</div>
 
-let data={
-title:document.getElementById("title").value,
-thumb:document.getElementById("thumb").value,
-video:document.getElementById("video").value
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+addDoc
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyBUUyZ-NgqhvrLve4u7BpDKbt560P5UJgQ",
+
+authDomain: "videos-d583f.firebaseapp.com",
+
+projectId: "videos-d583f",
+
+storageBucket: "videos-d583f.firebasestorage.app",
+
+messagingSenderId: "1027579550246",
+
+appId: "1:1027579550246:web:3979429f01d4aa763b64e7"
+
 };
 
-localStorage.setItem("video",JSON.stringify(data));
+const app = initializeApp(firebaseConfig);
 
-alert("Saved");
+const db = getFirestore(app);
+
+document.getElementById("saveBtn").onclick = async ()=>{
+
+const title=document.getElementById("title").value.trim();
+
+const category=document.getElementById("category").value.trim();
+
+const thumbnail=document.getElementById("thumbnail").value.trim();
+
+const videoUrl=document.getElementById("videoUrl").value.trim();
+
+if(!title||!category||!thumbnail||!videoUrl){
+
+alert("Please fill all fields");
+
+return;
 
 }
+
+try{
+
+await addDoc(collection(db,"videos"),{
+
+title,
+
+category,
+
+thumbnail,
+
+videoUrl
+
+});
+
+document.getElementById("status").innerHTML="✅ Video Saved Successfully";
+
+document.getElementById("title").value="";
+
+document.getElementById("category").value="";
+
+document.getElementById("thumbnail").value="";
+
+document.getElementById("videoUrl").value="";
+
+}catch(e){
+
+console.error(e);
+
+document.getElementById("status").innerHTML="❌ "+e.message;
+
+}
+
+};
 
 </script>
 
