@@ -1,66 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Videos</title>
 
 <link rel="stylesheet" href="style.css">
-
 </head>
 
 <body>
 
 <header>
-    🎬 Videos
+🎬 Videos
 </header>
 
 <div class="feed" id="videoList">
 
-    <!-- Video Card -->
+</div>
 
-    <div class="video-card">
+<script type="module">
 
-        <iframe
-            src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-            allowfullscreen>
-        </iframe>
+import { db } from "./firebase.js";
+import {
+collection,
+getDocs
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-        <div class="overlay">
+const container = document.getElementById("videoList");
 
-            <h2>Loading...</h2>
+async function loadVideos(){
 
-        </div>
+container.innerHTML="";
 
-        <div class="actions">
+const snapshot = await getDocs(collection(db,"videos"));
 
-            <button>❤️</button>
+snapshot.forEach(doc=>{
 
-            <span>0</span>
+const video = doc.data();
 
-            <button>🔗</button>
+const youtubeId = getYoutubeId(video.videoUrl);
 
-            <button>👁️</button>
+container.innerHTML += `
 
-            <span>0</span>
+<div class="video-card">
 
-        </div>
+<iframe
+src="https://www.youtube.com/embed/${youtubeId}?enablejsapi=1"
+allowfullscreen>
+</iframe>
 
-        <button class="watch-btn">
+<div class="overlay">
 
-            Watch
-
-        </button>
-
-    </div>
+<h2>${video.title}</h2>
 
 </div>
 
-<script type="module" src="firebase.js"></script>
+<div class="actions">
 
-<script type="module" src="app.js"></script>
+<button class="likeBtn">❤️</button>
+
+<span>0</span>
+
+<button onclick="shareVideo('${video.videoUrl}')">🔗</button>
+
+<button>👁️</button>
+
+<span>0</span>
+
+</div>
+
+<button
+class="watch-btn"
+onclick="location.href='watch.html?url='+encodeURIComponent('${video.videoUrl}')">
+
+Watch
+
+</button>
+
+</div>
+
+`;
+
+});
+
+}
+
+function getYoutubeId(url){
+
+const reg=/[?&]v=([^&#]+)/;
+
+const match=url.match(reg);
+
+if(match) return match[1];
+
+return url.split("/").pop();
+
+}
+
+window.shareVideo=function(url){
+
+navigator.clipboard.writeText(url);
+
+alert("Video Link Copied");
+
+}
+
+loadVideos();
+
+</script>
 
 </body>
 </html>
