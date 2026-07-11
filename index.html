@@ -131,6 +131,30 @@ color:#888;
 <footer>
 © 2026 Videos
 </footer>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyBUUyZ-NgqhvrLve4u7BpDKbt560P5UJgQ",
+  authDomain: "videos-d583f.firebaseapp.com",
+  projectId: "videos-d583f",
+  storageBucket: "videos-d583f.firebasestorage.app",
+  messagingSenderId: "1027579550246",
+  appId: "1:1027579550246:web:3979429f01d4aa763b64e7"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+console.log("Firebase Connected!");
+
+const snapshot = await getDocs(collection(db, "videos"));
+console.log(snapshot.docs.map(doc => doc.data()));
+</script>
 </body>
 </html>
