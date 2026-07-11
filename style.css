@@ -6,74 +6,96 @@
 }
 
 body{
-    background:#111;
+    background:#000;
     color:#fff;
+    overflow-x:hidden;
 }
 
 header{
-    background:#ff3b30;
-    color:#fff;
-    text-align:center;
-    padding:15px;
-    font-size:26px;
-    font-weight:bold;
-    position:sticky;
+    position:fixed;
     top:0;
-}
-
-.search{
-    padding:15px;
-}
-
-.search input{
-    width:100%;
-    padding:12px;
-    border:none;
-    border-radius:8px;
-    font-size:16px;
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
-    gap:20px;
-    padding:20px;
-}
-
-.card{
-    background:#222;
-    border-radius:12px;
-    overflow:hidden;
-}
-
-.card img{
-    width:100%;
-    height:180px;
-    object-fit:cover;
-}
-
-.info{
-    padding:15px;
-}
-
-button{
-    width:100%;
-    padding:12px;
-    background:#ff3b30;
-    color:white;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-    font-size:16px;
-    margin-top:10px;
-}
-
-button:hover{
-    background:#e60000;
-}
-
-footer{
+    left:0;
+    right:0;
+    z-index:100;
     text-align:center;
-    padding:20px;
-    color:#999;
+    padding:15px;
+    background:rgba(0,0,0,.6);
+    backdrop-filter:blur(8px);
+    font-size:24px;
+    font-weight:bold;
+}
+
+.feed{
+    margin-top:60px;
+}
+
+.video-card{
+    position:relative;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    scroll-snap-align:start;
+}
+
+.video-card iframe{
+    width:100%;
+    height:100%;
+    border:none;
+}
+
+.overlay{
+    position:absolute;
+    left:15px;
+    bottom:20px;
+}
+
+.overlay h2{
+    font-size:20px;
+    margin-bottom:8px;
+}
+
+.overlay p{
+    color:#ccc;
+}
+
+.actions{
+    position:absolute;
+    right:15px;
+    bottom:90px;
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.actions button{
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    border:none;
+    font-size:22px;
+    cursor:pointer;
+    background:#222;
+    color:#fff;
+}
+
+.actions span{
+    text-align:center;
+    font-size:14px;
+}
+
+.watch-btn{
+    position:absolute;
+    bottom:20px;
+    right:20px;
+    padding:12px 18px;
+    background:#ff3b30;
+    border:none;
+    border-radius:8px;
+    color:#fff;
+    cursor:pointer;
+}
+
+.feed{
+    scroll-snap-type:y mandatory;
 }
