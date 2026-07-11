@@ -9,8 +9,8 @@
 body{
 margin:0;
 background:#111;
-color:white;
-font-family:Arial;
+color:#fff;
+font-family:Arial,sans-serif;
 }
 
 header{
@@ -22,14 +22,14 @@ font-weight:bold;
 }
 
 .container{
-max-width:900px;
+max-width:1000px;
 margin:auto;
 padding:20px;
 }
 
 iframe{
 width:100%;
-height:500px;
+height:70vh;
 border:none;
 border-radius:12px;
 background:#000;
@@ -45,6 +45,10 @@ font-size:16px;
 border-radius:8px;
 cursor:pointer;
 }
+
+button:hover{
+background:#ff2200;
+}
 </style>
 
 </head>
@@ -55,16 +59,40 @@ cursor:pointer;
 
 <div class="container">
 
-<iframe
-src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-allowfullscreen>
-</iframe>
+<iframe id="player" allowfullscreen></iframe>
 
 <br>
 
 <button onclick="history.back()">⬅ Back</button>
 
 </div>
+
+<script>
+
+const params = new URLSearchParams(location.search);
+let url = params.get("url");
+
+if(url){
+
+if(url.includes("watch?v=")){
+const id = url.split("watch?v=")[1].split("&")[0];
+url = "https://www.youtube.com/embed/" + id;
+}
+
+if(url.includes("youtu.be/")){
+const id = url.split("youtu.be/")[1];
+url = "https://www.youtube.com/embed/" + id;
+}
+
+document.getElementById("player").src = url;
+
+}else{
+
+document.body.innerHTML="<h2 style='text-align:center;margin-top:100px'>No Video Found</h2>";
+
+}
+
+</script>
 
 </body>
 </html>
