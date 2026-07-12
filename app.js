@@ -23,6 +23,7 @@ async function loadVideos() {
     }));
 
     renderVideos(videos);
+
 }
 
 function renderVideos(list) {
@@ -90,9 +91,7 @@ window.likeVideo = async function(id){
     try{
 
         await updateDoc(doc(db,"videos",id),{
-
             likes:increment(1)
-
         });
 
         const video = videos.find(v=>v.id===id);
@@ -118,9 +117,7 @@ window.watchVideo = async function(id,url){
     try{
 
         await updateDoc(doc(db,"videos",id),{
-
             views:increment(1)
-
         });
 
         const video = videos.find(v=>v.id===id);
@@ -128,6 +125,8 @@ window.watchVideo = async function(id,url){
         if(video){
 
             video.views = (video.views || 0) + 1;
+
+            renderVideos(videos);
 
         }
 
@@ -137,8 +136,27 @@ window.watchVideo = async function(id,url){
 
     }
 
-    window.location.href =
-    "watch.html?url=" + encodeURIComponent(url);
+    // Rewarded Interstitial
+    if(typeof show_11273590 === "function"){
+
+        show_11273590().then(()=>{
+
+            window.location.href =
+            "watch.html?url=" + encodeURIComponent(url);
+
+        }).catch(()=>{
+
+            window.location.href =
+            "watch.html?url=" + encodeURIComponent(url);
+
+        });
+
+    }else{
+
+        window.location.href =
+        "watch.html?url=" + encodeURIComponent(url);
+
+    }
 
 }
 
